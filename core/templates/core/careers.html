@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Careers — Root Source Solutions{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+  <div class="section-inner" style="padding-bottom: 3rem;">
+    <p class="eyebrow reveal center">Careers</p>
+    <h1 class="section-title reveal center" style="margin-bottom: 1rem;">Build your future with us.</h1>
+    <p class="reveal center" style="max-width: 560px; margin: 0 auto; color: var(--text-secondary); line-height: 1.7;">
+      Whether we have an open role right now or not, we're always interested in
+      hearing from motivated people. Submit your resume and we'll reach out when
+      the right opportunity comes up.
+    </p>
+  </div>
+</section>
+
+<section class="section-inner" style="padding-top: 0;">
+
+  {% if open_jobs %}
+    <div class="jobs-grid">
+      {% for job in open_jobs %}
+      <div class="job-card reveal">
+        <div class="job-card__header">
+          <h3>{{ job.title }}</h3>
+          <span class="job-card__location"><i class="ti ti-map-pin"></i> {{ job.location }}</span>
+        </div>
+        <p class="job-card__company">{{ job.company }}</p>
+        <p class="job-card__desc">{{ job.description|truncatewords:28 }}</p>
+        {% if job.salary %}
+          <p class="job-card__salary"><i class="ti ti-currency-rupee"></i> {{ job.salary }}</p>
+        {% endif %}
+        <button type="button" class="btn btn-primary enroll-btn" data-course-id="" data-course-title="{{ job.title }}" data-job-id="{{ job.id }}">
+          Apply Now
+        </button>
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="no-jobs-state reveal">
+      <div class="why-icon" style="width: 64px; height: 64px; font-size: 2rem; margin: 0 auto 1.5rem;"><i class="ti ti-briefcase"></i></div>
+      <h3>No open positions right now</h3>
+      <p>We don't have any active openings at the moment, but we're always building
+        our talent pool. Drop your resume below and we'll reach out as soon as a
+        role that fits opens up.</p>
+    </div>
+  {% endif %}
+
+  <div class="talent-pool-card reveal">
+    <h3>Join our talent pool</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Submit your details and resume — we'll keep you in mind for upcoming roles.</p>
+
+    <form method="post" action="{% url 'submit_application' %}" enctype="multipart/form-data" id="talentPoolForm">
+      {% csrf_token %}
+      <input type="hidden" name="application_type" value="JOB">
+
+      <div class="form-row">
+        <label class="modal-label">
+          Full Name
+          <input type="text" name="name" required placeholder="Your full name">
+        </label>
+        <label class="modal-label">
+          Email
+          <input type="email" name="email" required placeholder="you@example.com">
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label class="modal-label">
+          Phone Number
+          <input type="tel" name="phone" required placeholder="+91 98765 43210">
+        </label>
+        <label class="modal-label">
+          College / Degree
+          <input type="text" name="college" placeholder="e.g. B.Tech CSE">
+        </label>
+      </div>
+
+      <label class="modal-label">
+        Resume (PDF/DOC, max 2MB)
+        <input type="file" name="resume" accept=".pdf,.doc,.docx" required>
+      </label>
+
+      <button type="submit" class="modal-submit">Submit</button>
+    </form>
+  </div>
+
+</section>
+
+{% endblock %}

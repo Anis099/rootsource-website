@@ -1,0 +1,69 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}About Us — Root Source Solutions{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+  <div class="section-inner" style="padding-bottom: 3rem;">
+    <p class="eyebrow reveal center">About us</p>
+    <h1 class="section-title reveal center" style="margin-bottom: 1.5rem;">Built to turn training into real careers.</h1>
+    <p class="reveal center" style="max-width: 640px; margin: 0 auto; color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+      Root Source Solutions is a training institute incorporated under the Companies Act, 2013,
+      focused on equipping individuals with in-demand IT and Non-IT skills through quality,
+      industry-aligned training programs — backed by dedicated placement support.
+    </p>
+  </div>
+</section>
+
+<section class="section-inner" style="padding-top: 0;">
+  <div class="vision-mission-grid">
+    <div class="vm-card reveal">
+      <div class="why-icon"><i class="ti ti-telescope"></i></div>
+      <h3>Our Vision</h3>
+      <p>To become a leading force in technology education — bridging the skill gap through
+        industry-aligned training and creating real career opportunities for every student
+        who trains with us.</p>
+    </div>
+    <div class="vm-card reveal">
+      <div class="why-icon"><i class="ti ti-target"></i></div>
+      <h3>Our Mission</h3>
+      <p>To deliver practical, industry-relevant training that builds real skills — not just
+        certificates — while providing dedicated placement support so every student's effort
+        translates into a career.</p>
+    </div>
+  </div>
+</section>
+
+<section class="visual-band reveal">
+  <div class="section-inner">
+    <div class="visual-grid">
+      <div class="visual-placeholder" style="border: none; padding: 0; overflow: hidden;">
+  <img src="https://rootsource.in/wp-content/uploads/2025/07/WhatsApp-Image-2025-12-17-at-11.13.24-AM-2.jpeg" alt="Root Source Solutions office" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius);">
+</div>
+      <div class="visual-text">
+        <p class="eyebrow">Who we are</p>
+        <h2 class="section-title" style="margin-bottom: 1rem;">Training, backed by real placement support.</h2>
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem;">
+          We work with experienced trainers and industry partners to make sure what you learn
+          in the classroom maps directly to what companies are hiring for — with a team that
+          stays involved through your placement journey, not just your last day of class.
+        </p>
+        <a href="{% url 'courses' %}" class="btn btn-primary">Explore our courses</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-band reveal">
+  <div class="cta-inner">
+    <h2>Have questions about a course?</h2>
+    <p>Our team is happy to walk you through the right path for your goals.</p>
+    <div class="cta-actions">
+      <a href="{% url 'contact' %}" class="btn btn-primary">Contact us</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

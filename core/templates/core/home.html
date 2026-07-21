@@ -1,0 +1,225 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+<section class="hero hero--textured">
+  <div class="hero-bg-shapes" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <p class="eyebrow reveal">Root Source Solutions</p>
+    <h1 class="reveal">Training that leads to <span class="highlight">real placements</span>.</h1>
+    <p class="hero-sub reveal">Industry-aligned IT and Non-IT courses, hands-on training, and dedicated placement support.</p>
+    <div class="hero-actions reveal">
+      <a href="{% url 'courses' %}" class="btn btn-primary">Explore Courses</a>
+      <a href="{% url 'contact' %}" class="btn btn-outline">Talk to us</a>
+    </div>
+  </div>
+</section>
+<section class="stats reveal">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <span class="odometer" data-count="20"></span><span class="stat-plus">+</span>
+      <span class="stat-label">Courses</span>
+    </div>
+    <div class="stat-item">
+      <span class="odometer" data-count="50"></span><span class="stat-plus">+</span>
+      <span class="stat-label">Experienced Staff</span>
+    </div>
+    <div class="stat-item">
+      <span class="odometer" data-count="1000"></span><span class="stat-plus">+</span>
+      <span class="stat-label">Placements</span>
+    </div>
+    <div class="stat-item">
+  <span class="odometer-decimal" data-count="4.9"></span><span class="stat-plus">+</span>
+  <span class="stat-label">Ratings</span>
+    </div>
+  </div>
+</section>
+<section class="why-us">
+  <div class="section-inner">
+    <p class="eyebrow reveal center">Why choose us</p>
+    <h2 class="section-title reveal center">Built for real careers, not just certificates.</h2>
+
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon"><i class="ti ti-target-arrow"></i></div>
+        <h3>Industry-relevant curriculum</h3>
+        <p>Courses built around what companies are actually hiring for right now.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><i class="ti ti-certificate"></i></div>
+        <h3>Certified trainers</h3>
+        <p>Learn from experienced professionals who've worked in the industry.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><i class="ti ti-code"></i></div>
+        <h3>Hands-on training</h3>
+        <p>Real projects and practical exercises, not just theory.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><i class="ti ti-clock"></i></div>
+        <h3>Flexible learning</h3>
+        <p>Online and offline batches that fit around your schedule.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><i class="ti ti-building"></i></div>
+        <h3>Corporate training</h3>
+        <p>Tailored programs for companies upskilling their teams.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="why-icon"><i class="ti ti-device-desktop"></i></div>
+        <h3>Modern infrastructure</h3>
+        <p>Updated labs and tools that match real workplace environments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="visual-band reveal">
+  <div class="section-inner">
+    <div class="visual-grid">
+      <div class="visual-text">
+        <p class="eyebrow">Training in action</p>
+        <h2 class="section-title" style="margin-bottom: 1rem;">Learning that feels like mentorship, not a lecture.</h2>
+        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem;">
+          Small batches, direct interaction, and trainers who sit with you through every
+          doubt — not a classroom where you're just another face in the crowd.
+        </p>
+        <a href="{% url 'about' %}" class="btn btn-outline">Learn more about us</a>
+      </div>
+      <div class="visual-placeholder" style="border: none; padding: 0; overflow: hidden;">
+       <img src="{% static 'core/images/training-session.jpg' %}" alt="Root Source Solutions training session" style="width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: var(--radius);">
+  </div>
+</section>
+<section class="courses-preview">
+  <div class="section-inner">
+    <p class="eyebrow reveal center">Our courses</p>
+    <h2 class="section-title reveal center">Skills that get you hired.</h2>
+
+    <div class="courses-grid">
+      {% for course in featured_courses %}
+      <div class="course-card reveal">
+        <div class="course-card__image-wrapper">
+          <img src="{{ course.icon }}" alt="{{ course.title }}" class="course-card__image" loading="lazy">
+        </div>
+        <div class="course-card__body">
+          <h3 class="course-card__title">{{ course.title }}</h3>
+          <div class="course-card__tags">
+            {% for tag in course.tag_list %}
+              <span class="course-card__tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          <div class="course-card__footer">
+            <div class="course-card__price">
+              <span class="course-card__price-original">₹{{ course.original_price|floatformat:0|intcomma }}</span>
+              <span class="course-card__price-offer">₹{{ course.offer_price|floatformat:0|intcomma }}</span>
+            </div>
+            <button type="button" class="btn btn-primary enroll-btn" data-course-id="{{ course.id }}" data-course-title="{{ course.title }}">
+            Enroll Now
+          </button>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p class="center" style="grid-column: 1 / -1; color: var(--text-secondary);">
+          No courses added yet — add some from the admin panel.
+        </p>
+      {% endfor %}
+    </div>
+
+    <div class="center" style="margin-top: 2.5rem;">
+      <a href="{% url 'courses' %}" class="btn btn-outline">View All Courses</a>
+    </div>
+  </div>
+</section>
+<section class="testimonials-section">
+  <div class="section-inner">
+    <p class="eyebrow reveal center">What our students say</p>
+    <h2 class="section-title reveal center">5.0 rating from 25+ Google reviews.</h2>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"They truly stand out as a dedicated software training and placement institute. Their focus on real-world skills, guidance, and career support is impressive."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#1a73e8;">A</div>
+          <div>
+            <strong>AruldiliprajRV</strong>
+            <span>Google Review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Root Source Solutions provides excellent software training with clear explanations and practical examples. The placement assistance is very helpful."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#7c3aed;">V</div>
+          <div>
+            <strong>Valli Raju</strong>
+            <span>Google Review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Practical, well-structured training that aligns closely with industry requirements. Trainers explain concepts clearly and ensure strong understanding."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#dc2626;">H</div>
+          <div>
+            <strong>Haswitha Chowdary</strong>
+            <span>Google Review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"I joined the SAP course — the trainer explained everything clearly, and I also got placement after completing the course. Highly recommend."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#16a34a;">P</div>
+          <div>
+            <strong>Pavithra V</strong>
+            <span>Google Review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Their training is super practical, well-organized, and actually focuses on what the industry needs — not just boring theories."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#ea580c;">V</div>
+          <div>
+            <strong>Vengatesh Kumar Raja</strong>
+            <span>Local Guide · Google Review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Best place for training and placements. Affordable fees, helpful placement support, friendly trainers, and a very good learning atmosphere."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#0891b2;">J</div>
+          <div>
+            <strong>Jammy Kiddo</strong>
+            <span>Google Review</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="cta-band reveal">
+  <div class="cta-inner">
+    <h2>Ready to start your career journey?</h2>
+    <p>Talk to our team and find the right course for your goals.</p>
+    <div class="cta-actions">
+      <a href="{% url 'contact' %}" class="btn btn-primary">Get in touch</a>
+      <a href="{% url 'careers' %}" class="btn btn-outline-light">View open jobs</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

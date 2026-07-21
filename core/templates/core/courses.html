@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Courses — Root Source Solutions{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+  <div class="section-inner" style="padding-bottom: 0;">
+    <p class="eyebrow reveal center">Our courses</p>
+    <h1 class="section-title reveal center">Find the course that fits your goals.</h1>
+  </div>
+</section>
+
+<section class="courses-page">
+  <div class="section-inner">
+
+    <div class="tab-switcher reveal">
+        <div class="tab-indicator" id="tabIndicator"></div>
+        <button class="tab-btn active" data-tab="it">IT Courses</button>
+        <button class="tab-btn" data-tab="non-it">Non-IT Courses</button>
+    </div>
+
+    <div class="tab-panel active" id="tab-it">
+      <div class="courses-grid">
+        {% for course in it_courses %}
+        <div class="course-card reveal">
+          <div class="course-card__image-wrapper">
+            <img src="{{ course.icon }}" alt="{{ course.title }}" class="course-card__image" loading="lazy">
+          </div>
+          <div class="course-card__body">
+            <h3 class="course-card__title">{{ course.title }}</h3>
+            <div class="course-card__tags">
+              {% for tag in course.tag_list %}
+                <span class="course-card__tag">{{ tag }}</span>
+              {% endfor %}
+            </div>
+            <div class="course-card__footer">
+  <div class="course-card__price">
+    <span class="course-card__price-original">₹{{ course.original_price|floatformat:0|intcomma }}</span>
+    <span class="course-card__price-offer">₹{{ course.offer_price|floatformat:0|intcomma }}</span>
+  </div>
+  <button type="button" class="btn btn-primary enroll-btn" data-course-id="{{ course.id }}" data-course-title="{{ course.title }}">
+    Enroll Now
+  </button>
+</div>
+          </div>
+        </div>
+        {% empty %}
+          <p class="center" style="grid-column: 1 / -1; color: var(--text-secondary);">No IT courses added yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="tab-panel" id="tab-non-it">
+      <div class="courses-grid">
+        {% for course in non_it_courses %}
+        <div class="course-card reveal">
+          <div class="course-card__image-wrapper">
+            <img src="{{ course.icon }}" alt="{{ course.title }}" class="course-card__image" loading="lazy">
+          </div>
+          <div class="course-card__body">
+            <h3 class="course-card__title">{{ course.title }}</h3>
+            <div class="course-card__tags">
+              {% for tag in course.tag_list %}
+                <span class="course-card__tag">{{ tag }}</span>
+              {% endfor %}
+            </div>
+            <div class="course-card__footer">
+  <div class="course-card__price">
+    <span class="course-card__price-original">₹{{ course.original_price|floatformat:0|intcomma }}</span>
+    <span class="course-card__price-offer">₹{{ course.offer_price|floatformat:0|intcomma }}</span>
+  </div>
+  <button type="button" class="btn btn-primary enroll-btn" data-course-id="{{ course.id }}" data-course-title="{{ course.title }}">
+    Enroll Now
+  </button>
+</div>
+          </div>
+        </div>
+        {% empty %}
+          <p class="center" style="grid-column: 1 / -1; color: var(--text-secondary);">No Non-IT courses added yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
