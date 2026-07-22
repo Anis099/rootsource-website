@@ -1,19 +1,5 @@
 /* ==========================================================================
    ANIMATIONS.JS — Drives everything defined in animations.css
-   ==========================================================================
-   Include this file once, right before </body>, after your DOM exists:
-     <script src="animations.js" defer></script>
-
-   Everything here is opt-in via data-attributes in your HTML — it never
-   touches elements that don't have the relevant attribute/class, so it's
-   safe to drop into an existing page.
-
-   Performance notes:
-   - Scroll reveals use IntersectionObserver (not scroll listeners), so
-     they cost nothing until an element is actually near the viewport.
-   - Parallax uses a single rAF loop shared across all [data-parallax]
-     elements, throttled to one transform write per frame.
-   - Everything bails out early if prefers-reduced-motion is set.
    ========================================================================== */
 
 (function () {
@@ -31,16 +17,10 @@
     initPageTransitions();
   });
 
-  /* ------------------------------------------------------------------
-     1. SPLIT TEXT — wraps letters or words in spans with an --i index
-        so animations.css can stagger them via transition-delay.
-        Runs before the reveal observer is attached so the spans exist
-        in time to be observed.
-     ------------------------------------------------------------------ */
   function initSplitText() {
     var nodes = document.querySelectorAll('[data-split]');
     nodes.forEach(function (node) {
-      var mode = node.getAttribute('data-split'); // "letters" | "words"
+      var mode = node.getAttribute('data-split');
       var text = node.textContent;
       var units = mode === 'words' ? text.split(/(\s+)/) : text.split('');
 
@@ -48,7 +28,6 @@
       var index = 0;
       units.forEach(function (unit) {
         if (mode === 'words' && unit.trim() === '') {
-          // preserve whitespace between words without animating it
           node.appendChild(document.createTextNode(unit));
           return;
         }
@@ -62,12 +41,6 @@
     });
   }
 
-  /* ------------------------------------------------------------------
-     2. SCROLL REVEAL — adds .in-view to any [data-animate] element
-        once it's sufficiently inside the viewport. Supports:
-          - data-delay="150"      manual delay in ms
-          - data-stagger          auto-stagger direct children by 80ms
-     ------------------------------------------------------------------ */
   function initScrollReveal() {
     var targets = document.querySelectorAll('[data-animate]');
 
@@ -76,14 +49,11 @@
       return;
     }
 
-    // Apply auto-stagger delays for children of [data-stagger] containers
     document.querySelectorAll('[data-stagger]').forEach(function (container) {
       var children = Array.prototype.filter.call(
         container.children,
         function (child) { return child.hasAttribute('data-animate') || child.matches('[data-animate]'); }
       );
-      // If the container itself is the data-animate target, stagger its
-      // direct children instead of itself
       var items = container.hasAttribute('data-animate')
         ? Array.prototype.slice.call(container.children)
         : children;
@@ -98,7 +68,6 @@
       });
     });
 
-    // Apply manual data-delay for any element that specifies one directly
     targets.forEach(function (el) {
       var delay = el.getAttribute('data-delay');
       if (delay && !el.style.getPropertyValue('--delay')) {
@@ -121,11 +90,6 @@
     targets.forEach(function (el) { observer.observe(el); });
   }
 
-  /* ------------------------------------------------------------------
-     3. COUNTERS — animates a number from 0 to data-target when the
-        element scrolls into view. Supports data-suffix and data-duration
-        (ms, default 1600).
-     ------------------------------------------------------------------ */
   function initCounters() {
     var counters = document.querySelectorAll('[data-counter]');
     if (!counters.length) return;
@@ -161,7 +125,6 @@
 
       function tick(now) {
         var progress = Math.min((now - start) / duration, 1);
-        // easeOutExpo for a fast-start, slow-settle count
         var eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
         var value = (target * eased).toFixed(decimals);
         el.textContent = value + suffix;
@@ -175,12 +138,6 @@
     }
   }
 
-  /* ------------------------------------------------------------------
-     4. PARALLAX — single shared rAF scroll loop. Each [data-parallax]
-        element sets its own speed via the attribute value, e.g.
-        data-parallax="0.3" (positive = moves slower than scroll,
-        negative = moves opposite direction).
-     ------------------------------------------------------------------ */
   function initParallax() {
     var layers = document.querySelectorAll('[data-parallax]');
     if (!layers.length || REDUCED_MOTION) return;
@@ -192,7 +149,6 @@
       layers.forEach(function (el) {
         var speed = parseFloat(el.getAttribute('data-parallax')) || 0.2;
         var rect = el.getBoundingClientRect();
-        // Only compute for elements anywhere near the viewport
         if (rect.bottom < -200 || rect.top > viewportH + 200) return;
         var offset = (rect.top - viewportH / 2) * speed * -1;
         el.style.transform = 'translateY(' + offset.toFixed(1) + 'px)';
@@ -212,11 +168,6 @@
     update();
   }
 
-  /* ------------------------------------------------------------------
-     5. BUTTON RIPPLE — appends a .ripple-dot at the pointer position
-        on any .btn-ripple element, sized to cover the largest possible
-        travel distance, then removes it after the animation finishes.
-     ------------------------------------------------------------------ */
   function initRipple() {
     var buttons = document.querySelectorAll('.btn-ripple');
     if (!buttons.length) return;
@@ -238,11 +189,6 @@
     });
   }
 
-  /* ------------------------------------------------------------------
-     6. SCROLL PROGRESS BAR — updates a .scroll-progress-bar element's
-        width to reflect how far down the page the user has scrolled.
-        No-op if the element doesn't exist on the page.
-     ------------------------------------------------------------------ */
   function initScrollProgress() {
     var bar = document.querySelector('.scroll-progress-bar');
     if (!bar) return;
@@ -259,12 +205,6 @@
     update();
   }
 
-  /* ------------------------------------------------------------------
-     7. PAGE TRANSITIONS — fades the page in on load (via the
-        .page-transition-ready class already in your HTML/CSS), and
-        fades to an overlay before following internal link clicks so
-        navigation feels continuous instead of an abrupt cut.
-     ------------------------------------------------------------------ */
   function initPageTransitions() {
     if (REDUCED_MOTION) return;
 
