@@ -1881,3 +1881,355 @@ body {
     transition: none !important;
   }
 }
+
+/* ==============================================================
+   ===== NEW: Slide & Interactive Animations (second pass —
+   ===== everything above remains untouched) =====================
+   ============================================================== */
+
+/* ----- Slide keyframes (left/right/top/bottom entrances) ----- */
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeftSmall {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInRightSmall {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideDownFade {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sweepLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes rippleOut {
+  from { transform: scale(0); opacity: 0.45; }
+  to   { transform: scale(2.2); opacity: 0; }
+}
+
+@keyframes tiltIn {
+  from { opacity: 0; transform: perspective(600px) rotateY(-12deg) translateX(-24px); }
+  to   { opacity: 1; transform: perspective(600px) rotateY(0deg) translateX(0); }
+}
+
+@keyframes counterPop {
+  0% { transform: scale(0.85); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ----- Slide-in reveal variant: alternate left/right by using a
+   modifier class alongside the existing .reveal system.
+   Add class="reveal reveal-left" or "reveal reveal-right" in markup
+   to opt an element into directional sliding (falls back to the
+   original .reveal fade-up if no modifier class is present). ----- */
+.reveal.reveal-left {
+  transform: translateX(-60px);
+}
+
+.reveal.reveal-left.is-visible {
+  animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform: translateX(0);
+}
+
+.reveal.reveal-right {
+  transform: translateX(60px);
+}
+
+.reveal.reveal-right.is-visible {
+  animation: slideInRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform: translateX(0);
+}
+
+/* Auto-alternating slide direction for grid items, so cards glide
+   in from left/right in sequence without needing markup changes. */
+.why-grid .reveal:nth-child(odd),
+.courses-grid .reveal:nth-child(odd),
+.testimonials-grid .reveal:nth-child(odd) {
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-grid .reveal:nth-child(odd):not(.is-visible),
+.courses-grid .reveal:nth-child(odd):not(.is-visible),
+.testimonials-grid .reveal:nth-child(odd):not(.is-visible) {
+  transform: translateX(-40px);
+}
+
+.why-grid .reveal:nth-child(even):not(.is-visible),
+.courses-grid .reveal:nth-child(even):not(.is-visible),
+.testimonials-grid .reveal:nth-child(even):not(.is-visible) {
+  transform: translateX(40px);
+}
+
+.why-grid .reveal.is-visible,
+.courses-grid .reveal.is-visible,
+.testimonials-grid .reveal.is-visible {
+  transform: translateX(0);
+}
+
+/* ----- Vision & Mission cards slide in from opposite sides ----- */
+.vision-mission-grid .vm-card:nth-child(1).reveal:not(.is-visible) {
+  transform: translateX(-50px);
+}
+
+.vision-mission-grid .vm-card:nth-child(2).reveal:not(.is-visible) {
+  transform: translateX(50px);
+}
+
+.vision-mission-grid .vm-card.reveal.is-visible {
+  transform: translateX(0);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* ----- Contact page: form slides from left, offices slide from right ----- */
+.contact-form-card {
+  animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.contact-offices .office-card {
+  animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.contact-offices .office-card:nth-child(1) { animation-delay: 0.05s; }
+.contact-offices .office-card:nth-child(2) { animation-delay: 0.15s; }
+.contact-offices .office-card:nth-child(3) { animation-delay: 0.25s; }
+
+/* ----- Visual band: placeholder slides from right, text column
+   slides from left, complementing the existing .visual-grid layout ----- */
+.visual-grid > *:first-child {
+  animation: slideInLeft 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.visual-grid .visual-placeholder {
+  animation: slideInRight 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ----- Job cards glide in left to right in sequence ----- */
+.jobs-grid .job-card {
+  animation: slideInLeft 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.jobs-grid .job-card:nth-child(1) { animation-delay: 0.05s; }
+.jobs-grid .job-card:nth-child(2) { animation-delay: 0.12s; }
+.jobs-grid .job-card:nth-child(3) { animation-delay: 0.19s; }
+.jobs-grid .job-card:nth-child(4) { animation-delay: 0.26s; }
+.jobs-grid .job-card:nth-child(5) { animation-delay: 0.33s; }
+.jobs-grid .job-card:nth-child(6) { animation-delay: 0.4s; }
+
+/* ----- Stat items: slide up and pop, staggered left to right ----- */
+.stats-inner .stat-item {
+  animation: counterPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.stats-inner .stat-item:nth-child(1) { animation-delay: 0.05s; }
+.stats-inner .stat-item:nth-child(2) { animation-delay: 0.15s; }
+.stats-inner .stat-item:nth-child(3) { animation-delay: 0.25s; }
+.stats-inner .stat-item:nth-child(4) { animation-delay: 0.35s; }
+
+/* ----- Section title underline sweep-in, anchored under section-title ----- */
+.section-title {
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  height: 3px;
+  width: 64px;
+  background: linear-gradient(90deg, var(--accent), #7bb8f0);
+  transform-origin: left center;
+  animation: sweepLine 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+/* ----- Nav links: slide down + fade on first paint ----- */
+.main-nav a {
+  animation: slideDownFade 0.5s ease both;
+}
+
+.main-nav a:nth-child(1) { animation-delay: 0.05s; }
+.main-nav a:nth-child(2) { animation-delay: 0.1s; }
+.main-nav a:nth-child(3) { animation-delay: 0.15s; }
+.main-nav a:nth-child(4) { animation-delay: 0.2s; }
+.main-nav a:nth-child(5) { animation-delay: 0.25s; }
+.main-nav a:nth-child(6) { animation-delay: 0.3s; }
+
+/* ----- Brand slides in from the left, nav CTA from the right, on load ----- */
+.brand {
+  animation: slideInLeftSmall 0.5s ease both;
+}
+
+.nav-cta {
+  animation: slideInRightSmall 0.5s ease both;
+}
+
+/* ----- Footer columns cascade in left to right ----- */
+.footer-inner > * {
+  animation: slideUpFade 0.6s ease both;
+}
+
+.footer-inner > *:nth-child(1) { animation-delay: 0.05s; }
+.footer-inner > *:nth-child(2) { animation-delay: 0.15s; }
+.footer-inner > *:nth-child(3) { animation-delay: 0.25s; }
+.footer-inner > *:nth-child(4) { animation-delay: 0.35s; }
+
+/* ----- Social icons pop in left to right with a slight rotation ----- */
+.social-icons a {
+  animation: tiltIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.social-icons a:nth-child(1) { animation-delay: 0.05s; }
+.social-icons a:nth-child(2) { animation-delay: 0.1s; }
+.social-icons a:nth-child(3) { animation-delay: 0.15s; }
+.social-icons a:nth-child(4) { animation-delay: 0.2s; }
+
+/* ----- Tab panel content slides in left to right instead of only fading
+   (adds to, does not replace, the existing tabFadeIn animation) ----- */
+.tab-panel.active .course-card,
+.tab-panel.active .job-card {
+  animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ----- Ripple effect helper for buttons: a pseudo-element that expands
+   on click via the .rippling class (toggle with JS on pointerdown) ----- */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn.rippling::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: rippleOut 0.6s ease-out;
+  pointer-events: none;
+}
+
+.btn-outline.rippling::after,
+.btn-outline-light.rippling::after {
+  background: rgba(11, 92, 171, 0.25);
+}
+
+/* ----- Testimonial cards alternate slide direction for visual rhythm ----- */
+.testimonials-grid .testimonial-card:nth-child(3n+1) {
+  animation: slideInLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.testimonials-grid .testimonial-card:nth-child(3n+2) {
+  animation: slideUpFade 0.6s ease 0.1s both;
+}
+
+.testimonials-grid .testimonial-card:nth-child(3n+3) {
+  animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ----- Talent pool & no-jobs empty state slide up into view ----- */
+.talent-pool-card {
+  animation: slideUpFade 0.6s ease both;
+}
+
+.no-jobs-state {
+  animation: slideUpFade 0.6s ease both;
+}
+
+/* ----- Modal content: title/subtitle/fields cascade left to right ----- */
+.modal-title {
+  animation: slideInLeftSmall 0.35s ease both;
+}
+
+.modal-subtitle {
+  animation: slideInLeftSmall 0.35s ease 0.05s both;
+}
+
+#applyForm .modal-label,
+#contactForm .modal-label,
+#talentPoolForm .modal-label {
+  animation: slideUpFade 0.35s ease both;
+}
+
+/* ----- CTA band content slides up with a slight delay between heading,
+   copy and buttons for a layered entrance ----- */
+.cta-inner h2 {
+  animation: slideUpFade 0.6s ease both;
+}
+
+.cta-inner p {
+  animation: slideUpFade 0.6s ease 0.1s both;
+}
+
+.cta-actions {
+  animation: slideUpFade 0.6s ease 0.2s both;
+}
+
+/* ----- Respect reduced motion preference for this second animation pass ----- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal.reveal-left,
+  .reveal.reveal-right,
+  .why-grid .reveal,
+  .courses-grid .reveal,
+  .testimonials-grid .reveal,
+  .vision-mission-grid .vm-card,
+  .contact-form-card,
+  .contact-offices .office-card,
+  .visual-grid > *:first-child,
+  .visual-grid .visual-placeholder,
+  .jobs-grid .job-card,
+  .stats-inner .stat-item,
+  .section-title::after,
+  .main-nav a,
+  .brand,
+  .nav-cta,
+  .footer-inner > *,
+  .social-icons a,
+  .tab-panel.active .course-card,
+  .tab-panel.active .job-card,
+  .btn.rippling::after,
+  .testimonials-grid .testimonial-card,
+  .talent-pool-card,
+  .no-jobs-state,
+  .modal-title,
+  .modal-subtitle,
+  #applyForm .modal-label,
+  #contactForm .modal-label,
+  #talentPoolForm .modal-label,
+  .cta-inner h2,
+  .cta-inner p,
+  .cta-actions {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}
