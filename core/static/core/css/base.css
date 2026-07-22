@@ -2233,3 +2233,261 @@ body {
     transform: none !important;
   }
 }
+
+/* ==============================================================
+   ===== NEW: Cinematic Smooth-Scroll Reveal System (third pass)
+   ===== — nothing above was changed or removed. This pass
+   ===== upgrades the *feel* of reveals to match a premium,
+   ===== buttery-smooth scroll site: longer eased motion, a
+   ===== blur-to-focus finish, subtle depth/scale, and gentler
+   ===== staggering. Works alongside every animation already
+   ===== defined above; it does not replace them. =================
+   ============================================================== */
+
+/* ----- Smoother native scrolling feel ----- */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+/* ----- Core cinematic reveal: blur + rise + slight scale.
+   This is an alternate, opt-in reveal style — add the class
+   "reveal-cinematic" (instead of, or alongside, "reveal") to
+   any element in your HTML to use it. Existing ".reveal" markup
+   keeps working exactly as it did before. ----- */
+.reveal-cinematic {
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  filter: blur(6px);
+  transition: opacity 0.9s cubic-bezier(0.19, 1, 0.22, 1),
+              transform 0.9s cubic-bezier(0.19, 1, 0.22, 1),
+              filter 0.9s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: opacity, transform, filter;
+}
+
+.reveal-cinematic.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+/* Directional cinematic variants */
+.reveal-cinematic.from-left {
+  transform: translateX(-70px) scale(0.97);
+}
+
+.reveal-cinematic.from-left.is-visible {
+  transform: translateX(0) scale(1);
+}
+
+.reveal-cinematic.from-right {
+  transform: translateX(70px) scale(0.97);
+}
+
+.reveal-cinematic.from-right.is-visible {
+  transform: translateX(0) scale(1);
+}
+
+/* Gentle, generous stagger for groups of cinematic reveals —
+   longer gaps than the existing .reveal stagger so each element
+   gets its own moment, matching an unhurried premium scroll feel. */
+.reveal-cinematic:nth-child(1) { transition-delay: 0.05s; }
+.reveal-cinematic:nth-child(2) { transition-delay: 0.18s; }
+.reveal-cinematic:nth-child(3) { transition-delay: 0.31s; }
+.reveal-cinematic:nth-child(4) { transition-delay: 0.44s; }
+.reveal-cinematic:nth-child(5) { transition-delay: 0.57s; }
+.reveal-cinematic:nth-child(6) { transition-delay: 0.70s; }
+
+/* ----- Hero: soft depth-of-field settle on load. Background
+   starts slightly zoomed + blurred and eases to sharp focus,
+   giving the same unhurried, high-production feel as a slow
+   push-in shot. ----- */
+@keyframes heroSettle {
+  from {
+    opacity: 0;
+    transform: scale(1.08);
+    filter: blur(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+.hero--textured::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-bg-shapes {
+  animation: heroSettle 1.6s cubic-bezier(0.19, 1, 0.22, 1) both,
+             gradientShift 12s ease-in-out 1.6s infinite;
+}
+
+/* Hero copy rises slower and later than before, overlapping the
+   background settle so the whole hero reads as one continuous
+   cinematic move rather than separate pieces popping in. */
+.hero .eyebrow {
+  animation: fadeInUp 1s cubic-bezier(0.19, 1, 0.22, 1) 0.5s both;
+}
+
+.hero h1 {
+  animation: fadeInUp 1.1s cubic-bezier(0.19, 1, 0.22, 1) 0.65s both;
+}
+
+.hero .hero-sub {
+  animation: fadeInUp 1.1s cubic-bezier(0.19, 1, 0.22, 1) 0.8s both;
+}
+
+.hero-actions {
+  animation: fadeInUp 1.1s cubic-bezier(0.19, 1, 0.22, 1) 0.95s both;
+}
+
+/* ----- Slide arrows / carousel dots (if present) ease in last,
+   like a UI chrome layer settling after the content. ----- */
+.hero + * .stats-inner,
+.stats-inner {
+  transition: opacity 0.6s ease;
+}
+
+/* ----- Card grids: soften the entrance so it reads as "settling
+   into place" rather than "popping up" — longer duration, gentle
+   overshoot removed, blur added for a filmic finish. Applies as
+   an available upgrade via .reveal-cinematic on card elements;
+   your existing .reveal-based cards are untouched. ----- */
+.course-card.reveal-cinematic,
+.why-card.reveal-cinematic,
+.job-card.reveal-cinematic,
+.testimonial-card.reveal-cinematic,
+.office-card.reveal-cinematic,
+.vm-card.reveal-cinematic {
+  transition: opacity 0.85s cubic-bezier(0.19, 1, 0.22, 1),
+              transform 0.85s cubic-bezier(0.19, 1, 0.22, 1),
+              filter 0.85s cubic-bezier(0.19, 1, 0.22, 1),
+              box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* ----- Images: cinematic reveal wipe. Wrap an <img> in
+   <div class="img-reveal"> to get a curtain-style clip-path wipe
+   instead of a plain fade — closer to how hero/feature imagery
+   unveils on high-production sites. ----- */
+.img-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.img-reveal img {
+  transform: scale(1.15);
+  transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.img-reveal::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bg, #fff);
+  transform-origin: right center;
+  transform: scaleX(1);
+  transition: transform 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.img-reveal.is-visible img {
+  transform: scale(1);
+}
+
+.img-reveal.is-visible::after {
+  transform: scaleX(0);
+}
+
+/* ----- Numbers / stats: slow, weighty count-up settle instead
+   of a quick pop — pairs with JS-driven number counting if you
+   add it, and still looks intentional as a pure CSS entrance. ----- */
+.stats-inner .stat-item.reveal-cinematic {
+  transition: opacity 1s cubic-bezier(0.19, 1, 0.22, 1),
+              transform 1s cubic-bezier(0.19, 1, 0.22, 1),
+              filter 1s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* ----- Buttons: a slower, more magnetic hover lift that matches
+   an unhurried, premium interaction style rather than a snappy
+   micro-interaction. Layers on top of the existing .btn-primary
+   hover without changing it. ----- */
+.btn-primary,
+.btn-outline,
+.btn-outline-light {
+  transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1),
+              box-shadow 0.45s cubic-bezier(0.19, 1, 0.22, 1),
+              background 0.3s ease;
+}
+
+/* ----- Section backgrounds: very slow ambient drift, so large
+   color/gradient sections never feel static even without user
+   interaction — subtle enough not to distract. ----- */
+.stats {
+  background-size: 200% 200%;
+  animation: gradientShift 18s ease-in-out infinite;
+}
+
+/* ----- Smooth cross-fade when tab panels change, slower and
+   softer than the existing quick tabFadeIn, as an alternate you
+   can opt into by adding class "tab-panel-cinematic". ----- */
+.tab-panel-cinematic {
+  display: none;
+}
+
+.tab-panel-cinematic.active {
+  display: block;
+  animation: fadeInUp 0.8s cubic-bezier(0.19, 1, 0.22, 1) both;
+}
+
+/* ----- Nav: logo and links settle in with the same unhurried
+   cubic-bezier used throughout this pass, rather than a quick
+   ease, so the header feels consistent with the rest of the page. ----- */
+.brand,
+.main-nav a,
+.nav-cta {
+  transition: opacity 0.6s cubic-bezier(0.19, 1, 0.22, 1),
+              transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* ----- Respect reduced motion for this pass too ----- */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-cinematic,
+  .reveal-cinematic.from-left,
+  .reveal-cinematic.from-right,
+  .hero-bg-shapes,
+  .hero .eyebrow,
+  .hero h1,
+  .hero .hero-sub,
+  .hero-actions,
+  .course-card.reveal-cinematic,
+  .why-card.reveal-cinematic,
+  .job-card.reveal-cinematic,
+  .testimonial-card.reveal-cinematic,
+  .office-card.reveal-cinematic,
+  .vm-card.reveal-cinematic,
+  .img-reveal img,
+  .img-reveal::after,
+  .stats-inner .stat-item.reveal-cinematic,
+  .btn-primary,
+  .btn-outline,
+  .btn-outline-light,
+  .stats,
+  .tab-panel-cinematic.active,
+  .brand,
+  .main-nav a,
+  .nav-cta {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .reveal-cinematic,
+  .img-reveal::after {
+    opacity: 1 !important;
+  }
+}

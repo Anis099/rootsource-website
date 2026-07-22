@@ -1,0 +1,391 @@
+/* ==========================================================================
+   ANIMATIONS.CSS — Modern site-wide animation system
+   ==========================================================================
+   Load this file AFTER your existing stylesheet(s). It does not override
+   or remove anything from your current CSS — it only adds new utility
+   classes you opt into by adding them to your HTML.
+
+   Pair it with animations.js, which drives:
+     - scroll-triggered reveals (IntersectionObserver)
+     - staggered children
+     - letter/word splitting
+     - number counters
+     - parallax
+     - button ripple
+
+   ---------------------------------------------------------------------
+   QUICK USAGE GUIDE
+   ---------------------------------------------------------------------
+   TEXT
+     <h2 data-animate="fade-up">Heading</h2>
+     <p  data-animate="slide-up">Paragraph</p>
+     <h1 data-animate="zoom-in">Title</h1>
+     <h1 data-split="letters" data-animate="stagger-letters">Hello</h1>
+     <p  data-split="words"   data-animate="stagger-words">Some words here</p>
+
+   IMAGES
+     <img data-animate="img-left"  src="...">
+     <img data-animate="img-right" src="...">
+     <img data-animate="img-zoom"  src="...">
+     <img class="anim-float" src="...">   (continuous idle float, no scroll trigger needed)
+
+   CARDS (hover only, no JS needed)
+     <div class="card-hover-lift">...</div>
+     <div class="card-hover-tilt">...</div>
+     <div class="card-hover-glow">...</div>
+
+   BUTTONS
+     <button class="btn-ripple">Click me</button>       (ripple, JS adds the effect on click)
+     <button class="btn-glow">Get Started</button>       (hover glow, pure CSS)
+
+   SCROLL REVEAL (generic, works on any element)
+     <div data-animate="fade-up">...</div>
+     Add data-delay="150" for a manual delay in ms.
+     Wrap a group in data-stagger to auto-stagger its direct children:
+     <div data-stagger data-animate="fade-up">
+       <div>Card 1</div>
+       <div>Card 2</div>
+       <div>Card 3</div>
+     </div>
+
+   COUNTERS
+     <span data-counter data-target="1000" data-suffix="+">0</span>
+
+   PARALLAX
+     <div class="parallax-layer" data-parallax="0.3">...</div>
+
+   PAGE TRANSITION
+     Add class "page-transition-ready" to <body>. animations.js handles
+     the fade-in on load and fade-out on internal link clicks.
+   ---------------------------------------------------------------------
+*/
+
+:root {
+  --anim-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --anim-ease-soft: cubic-bezier(0.19, 1, 0.22, 1);
+  --anim-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --anim-duration-fast: 0.4s;
+  --anim-duration: 0.7s;
+  --anim-duration-slow: 1.1s;
+  --anim-accent: var(--accent, #0b5cab);
+  --anim-accent-glow: rgba(11, 92, 171, 0.45);
+}
+
+/* Respect user preference globally — every animation in this file is
+   neutralised if the user has reduced-motion turned on. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   1. SCROLL-REVEAL ENGINE (JS toggles .in-view when element enters viewport)
+   ========================================================================== */
+
+[data-animate] {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+}
+
+[data-animate].in-view {
+  opacity: 1;
+}
+
+/* ----- fade-up: the default, most versatile reveal ----- */
+[data-animate="fade-up"] {
+  transform: translateY(36px);
+  transition: opacity var(--anim-duration) var(--anim-ease),
+              transform var(--anim-duration) var(--anim-ease);
+}
+[data-animate="fade-up"].in-view {
+  transform: translateY(0);
+}
+
+/* ----- slide-up: larger travel distance, slightly slower, for hero-scale text ----- */
+[data-animate="slide-up"] {
+  transform: translateY(64px);
+  transition: opacity var(--anim-duration-slow) var(--anim-ease-soft),
+              transform var(--anim-duration-slow) var(--anim-ease-soft);
+}
+[data-animate="slide-up"].in-view {
+  transform: translateY(0);
+}
+
+/* ----- zoom-in ----- */
+[data-animate="zoom-in"] {
+  transform: scale(0.85);
+  transition: opacity var(--anim-duration) var(--anim-ease-bounce),
+              transform var(--anim-duration) var(--anim-ease-bounce);
+}
+[data-animate="zoom-in"].in-view {
+  transform: scale(1);
+}
+
+/* ----- fade only (no movement) — for things where motion would feel odd ----- */
+[data-animate="fade"] {
+  transition: opacity var(--anim-duration) ease;
+}
+
+/* ----- image slide-in from left / right ----- */
+[data-animate="img-left"] {
+  transform: translateX(-80px);
+  transition: opacity var(--anim-duration-slow) var(--anim-ease-soft),
+              transform var(--anim-duration-slow) var(--anim-ease-soft);
+}
+[data-animate="img-left"].in-view {
+  transform: translateX(0);
+}
+
+[data-animate="img-right"] {
+  transform: translateX(80px);
+  transition: opacity var(--anim-duration-slow) var(--anim-ease-soft),
+              transform var(--anim-duration-slow) var(--anim-ease-soft);
+}
+[data-animate="img-right"].in-view {
+  transform: translateX(0);
+}
+
+/* ----- image zoom: starts slightly oversized and settles, like a lens focus ----- */
+[data-animate="img-zoom"] {
+  transform: scale(1.15);
+  filter: blur(4px);
+  transition: opacity var(--anim-duration-slow) var(--anim-ease-soft),
+              transform var(--anim-duration-slow) var(--anim-ease-soft),
+              filter var(--anim-duration-slow) var(--anim-ease-soft);
+}
+[data-animate="img-zoom"].in-view {
+  transform: scale(1);
+  filter: blur(0);
+}
+
+/* ----- staggered letters / words: JS wraps each letter/word in a <span
+   class="split-unit"> and sets --i (index) on it; this CSS handles the
+   per-letter transition + delay ----- */
+[data-animate="stagger-letters"] .split-unit,
+[data-animate="stagger-words"] .split-unit {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.6em);
+  transition: opacity 0.6s var(--anim-ease), transform 0.6s var(--anim-ease);
+  transition-delay: calc(var(--i, 0) * 40ms);
+}
+
+[data-animate="stagger-letters"].in-view .split-unit,
+[data-animate="stagger-words"].in-view .split-unit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slightly longer per-item delay for word stagger (fewer, larger units read
+   better with more separation than letters do) */
+[data-animate="stagger-words"] .split-unit {
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+
+/* Manual per-element delay override: JS reads data-delay and sets this
+   custom property, so any [data-animate] element can stagger individually
+   without needing data-stagger on a parent. */
+[data-animate][style*="--delay"] {
+  transition-delay: var(--delay);
+}
+
+/* ==========================================================================
+   2. CONTINUOUS / IDLE ANIMATIONS (no scroll trigger needed)
+   ========================================================================== */
+
+@keyframes anim-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.anim-float {
+  animation: anim-float 4s ease-in-out infinite;
+}
+
+.anim-float-slow {
+  animation: anim-float 7s ease-in-out infinite;
+}
+
+@keyframes anim-pulse-soft {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+
+.anim-pulse {
+  animation: anim-pulse-soft 2.6s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   3. CARD HOVER EFFECTS
+   ========================================================================== */
+
+.card-hover-lift {
+  transition: transform 0.4s var(--anim-ease), box-shadow 0.4s var(--anim-ease);
+}
+.card-hover-lift:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.16);
+}
+
+.card-hover-tilt {
+  transition: transform 0.4s var(--anim-ease), box-shadow 0.4s var(--anim-ease);
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+.card-hover-tilt:hover {
+  transform: perspective(800px) rotateX(4deg) rotateY(-6deg) translateY(-6px);
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.16);
+}
+
+.card-hover-glow {
+  position: relative;
+  transition: transform 0.4s var(--anim-ease);
+  z-index: 0;
+}
+.card-hover-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--anim-accent), #7bb8f0);
+  opacity: 0;
+  filter: blur(16px);
+  transition: opacity 0.4s ease;
+}
+.card-hover-glow:hover {
+  transform: translateY(-6px);
+}
+.card-hover-glow:hover::before {
+  opacity: 0.55;
+}
+
+/* Image zoom-on-hover, for use inside any card with an <img> */
+.card-img-zoom {
+  overflow: hidden;
+}
+.card-img-zoom img {
+  transition: transform 0.6s var(--anim-ease);
+}
+.card-img-zoom:hover img {
+  transform: scale(1.08);
+}
+
+/* ==========================================================================
+   4. BUTTON EFFECTS — ripple + glow
+   ========================================================================== */
+
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* JS appends a .ripple-dot span at the click coordinates on pointerdown;
+   this class defines its animation. Removed automatically after it plays. */
+.ripple-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.55);
+  transform: scale(0);
+  pointer-events: none;
+  animation: anim-ripple 0.7s ease-out forwards;
+}
+
+@keyframes anim-ripple {
+  to {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+.btn-glow {
+  position: relative;
+  transition: transform 0.35s var(--anim-ease), box-shadow 0.35s var(--anim-ease);
+}
+.btn-glow:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 4px var(--anim-accent-glow), 0 12px 28px var(--anim-accent-glow);
+}
+.btn-glow:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* ==========================================================================
+   5. COUNTERS
+   ========================================================================== */
+
+[data-counter] {
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
+
+/* Small pop when the counter starts, purely cosmetic */
+[data-counter].counter-started {
+  animation: anim-pulse-soft 0.5s var(--anim-ease-bounce);
+}
+
+/* ==========================================================================
+   6. PARALLAX
+   ========================================================================== */
+
+.parallax-wrap {
+  overflow: hidden;
+  position: relative;
+}
+
+/* JS updates transform: translateY() inline via a CSS variable so this
+   class just needs to declare the transition-free base state. Parallax
+   must not use `transition` (it's driven every frame), only `transform`. */
+[data-parallax] {
+  will-change: transform;
+}
+
+/* ==========================================================================
+   7. PAGE TRANSITIONS
+   ========================================================================== */
+
+body.page-transition-ready {
+  opacity: 0;
+  animation: anim-page-in 0.6s var(--anim-ease-soft) forwards;
+}
+
+@keyframes anim-page-in {
+  to { opacity: 1; }
+}
+
+.page-transition-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg, #fff);
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s var(--anim-ease-soft);
+}
+
+.page-transition-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ==========================================================================
+   8. SCROLL PROGRESS BAR (optional, pairs with animations.js)
+   ========================================================================== */
+
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--anim-accent), #7bb8f0);
+  z-index: 1100;
+  transition: width 0.1s linear;
+}
