@@ -137,7 +137,17 @@
   </div>
 </div>
 
+<h1 data-split="letters" data-animate="stagger-letters">Your Heading</h1>
+
+<div class="courses-grid" data-stagger data-animate="fade-up">
+  <div class="course-card">...</div>
+  <div class="course-card">...</div>
+</div>
+
+<span data-counter data-target="1000" data-suffix="+">0</span>
+
   <script src="{% static 'core/js/base.js' %}"></script>
+  <script src="{% static 'core/js/animations.js' %}"></script>
   {% block extra_js %}{% endblock %}
 </body>
 </html>
