@@ -1632,3 +1632,252 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==============================================================
+   ===== NEW: Additional Animations (appended, nothing above
+   ===== was changed or removed) =================================
+   ============================================================== */
+
+/* ----- Reusable entrance keyframes ----- */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gentlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+@keyframes softBounce {
+  0%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-10px); }
+  50% { transform: translateY(0); }
+  70% { transform: translateY(-4px); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes underlineGrow {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes iconWiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes borderPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(11, 92, 171, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(11, 92, 171, 0); }
+}
+
+/* ----- Hero entrance animation ----- */
+.hero .eyebrow {
+  animation: fadeInDown 0.7s ease both;
+}
+
+.hero h1 {
+  animation: fadeInUp 0.8s ease 0.1s both;
+}
+
+.hero .hero-sub {
+  animation: fadeInUp 0.8s ease 0.25s both;
+}
+
+.hero-actions {
+  animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.hero-bg-shapes {
+  animation: gradientShift 12s ease-in-out infinite;
+  background-size: 200% 200%;
+}
+
+/* ----- Nav underline reveal on active/hover uses existing ::after,
+   this adds a smoother animated draw instead of instant width jump ----- */
+.main-nav a:hover::after,
+.main-nav a.active::after {
+  animation: underlineGrow 0.25s ease forwards;
+}
+
+/* ----- Brand mark subtle motion ----- */
+.brand-mark {
+  transition: transform 0.3s ease;
+}
+
+.brand:hover .brand-mark {
+  animation: iconWiggle 0.5s ease;
+}
+
+/* ----- Buttons: add a soft pulse focus ring animation ----- */
+.btn:focus-visible {
+  animation: borderPulse 1.2s ease-out 1;
+}
+
+/* ----- Why icons float gently on hover (extends existing why-card hover) ----- */
+.why-card:hover .why-icon {
+  animation: softBounce 0.7s ease;
+}
+
+/* ----- Course card image zoom-in on hover ----- */
+.course-card__image {
+  transition: transform 0.4s ease;
+}
+
+.course-card:hover .course-card__image {
+  transform: scale(1.06);
+}
+
+/* ----- Course tag subtle pop-in when card is revealed ----- */
+.course-card.reveal.is-visible .course-card__tag {
+  animation: zoomIn 0.4s ease both;
+}
+
+/* ----- CTA band gradient breathing effect ----- */
+.cta-band {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease-in-out infinite;
+}
+
+/* ----- Section titles fade/slide in when revealed (pairs with .reveal) ----- */
+.section-title.reveal {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* ----- Testimonial stars twinkle in on card hover ----- */
+.testimonial-card:hover .testimonial-stars {
+  animation: gentlePulse 0.6s ease;
+}
+
+/* ----- Testimonial avatar subtle rotate on hover ----- */
+.testimonial-avatar {
+  transition: transform 0.3s ease;
+}
+
+.testimonial-card:hover .testimonial-avatar {
+  transform: rotate(-6deg) scale(1.08);
+}
+
+/* ----- Job card salary icon float loop ----- */
+.job-card:hover .job-card__salary {
+  animation: fadeInLeft 0.35s ease;
+}
+
+/* ----- Office card entrance stagger (mirrors existing why-grid/courses-grid stagger) ----- */
+.contact-offices .reveal:nth-child(1) { transition-delay: 0.05s; }
+.contact-offices .reveal:nth-child(2) { transition-delay: 0.15s; }
+.contact-offices .reveal:nth-child(3) { transition-delay: 0.25s; }
+
+/* ----- Modal label inputs: subtle shimmer highlight on focus ----- */
+.modal-label input:focus,
+.modal-label textarea:focus {
+  animation: borderPulse 0.8s ease-out 1;
+}
+
+/* ----- Toast icon pop ----- */
+.toast i {
+  animation: zoomIn 0.35s ease both;
+}
+
+/* ----- WhatsApp float entrance on page load ----- */
+.whatsapp-float {
+  animation: fadeInUp 0.6s ease 0.5s both;
+}
+
+/* ----- Scroll progress bar subtle glow pulse while active ----- */
+.scroll-progress {
+  animation: gentlePulse 2s ease-in-out infinite;
+  transform-origin: left center;
+}
+
+/* ----- Stats numbers pop in when section is revealed ----- */
+.stats.reveal .odometer-static,
+.stats.reveal .digit-reel,
+.stats.reveal .stat-plus,
+.stats.reveal .digit-dot {
+  animation: zoomIn 0.5s ease both;
+}
+
+/* ----- Vision & mission cards: soft rotate-in accent on hover icon area ----- */
+.vm-card:hover h3 {
+  animation: fadeInLeft 0.3s ease;
+}
+
+/* ----- No-jobs empty state entrance ----- */
+.no-jobs-state.reveal {
+  animation-fill-mode: both;
+}
+
+/* ----- Tab indicator gentle bounce when switching (adds to existing transition) ----- */
+.tab-indicator {
+  animation: gentlePulse 0.3s ease;
+}
+
+/* ----- Respect reduced motion preference for all new animations ----- */
+@media (prefers-reduced-motion: reduce) {
+  .hero .eyebrow,
+  .hero h1,
+  .hero .hero-sub,
+  .hero-actions,
+  .hero-bg-shapes,
+  .brand:hover .brand-mark,
+  .btn:focus-visible,
+  .why-card:hover .why-icon,
+  .course-card__image,
+  .course-card.reveal.is-visible .course-card__tag,
+  .cta-band,
+  .testimonial-card:hover .testimonial-stars,
+  .testimonial-avatar,
+  .job-card:hover .job-card__salary,
+  .modal-label input:focus,
+  .modal-label textarea:focus,
+  .toast i,
+  .whatsapp-float,
+  .scroll-progress,
+  .stats.reveal .odometer-static,
+  .stats.reveal .digit-reel,
+  .stats.reveal .stat-plus,
+  .stats.reveal .digit-dot,
+  .vm-card:hover h3,
+  .tab-indicator {
+    animation: none !important;
+    transition: none !important;
+  }
+}
