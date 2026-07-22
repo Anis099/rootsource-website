@@ -2274,3 +2274,14 @@ body.page-transition-ready {
   z-index: 1100;
   transition: width 0.1s linear;
 }
+/* Image Slide from Left */
+[data-animate="img-left"] {
+    opacity: 0;
+    transform: translateX(-150px);
+    transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-animate="img-left"].in-view {
+    opacity: 1;
+    transform: translateX(0);
+}

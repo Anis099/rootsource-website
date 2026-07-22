@@ -158,7 +158,6 @@ function moveIndicator(btn) {
 }
 
 if (tabButtons.length && tabIndicator) {
-  // Position indicator on the initially active tab
   const initialActive = document.querySelector('.tab-btn.active');
   if (initialActive) {
     requestAnimationFrame(() => moveIndicator(initialActive));
